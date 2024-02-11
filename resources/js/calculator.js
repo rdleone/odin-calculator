@@ -1,12 +1,73 @@
 import {add, subtract, multiply, divide} from "./math.js";
+const OPERATORS = ["+", "-", "x", "÷"];
 
-function styleButtons() {
+function enableButtons() {
     let buttons = document.querySelectorAll("button");
     for(const button of buttons) {
+
+        button.addEventListener("click", (event) => {
+            updateDisplay(button.textContent);
+        })
+
+        // Make short text larger
         if(button.textContent.length <= 3) {
             button.style.fontSize = "150%";
         }
     }
+}
+
+function updateDisplay(text) {
+    const display = document.querySelector(".calculator-display");
+    if(display.textContent.charAt(0) === "#") {
+        clear();
+    }
+    switch(text) {
+        case "CLEAR":
+            clear();
+        break;
+        case "ENTER":
+            let parts = display.textContent.split("");
+            let expr = combineNumbers(parts);
+            display.textContent = evaluateExpression(expr);
+        break;
+        default:
+            display.textContent = display.textContent + text;
+    }
+}
+
+function clear() {
+    const display = document.querySelector(".calculator-display");
+    display.textContent = "";
+}
+
+function combineNumbers(expr) {
+    let newExpr = expr;
+    for(let i = 0; i < newExpr.length - 1; i++) {
+        let j = i + 1;
+        while(newExpr[i].match(/[0-9]/g) && j < newExpr.length && newExpr[j].match(/[0-9]/g)) {
+            newExpr[i] = newExpr[i] + newExpr[j];
+            newExpr[j] = null;
+            newExpr = newExpr.filter((val) => {
+                return val !== null;
+            });
+        }
+    }
+
+    return newExpr;
+}
+
+function evaluateExpression(expr) {
+    // Base case
+    if(expr.length <= 3) {
+        try {
+            return operate(parseFloat(expr[0]), expr[1], parseFloat(expr[2]));
+        } catch(error) {
+            console.log(error);
+            return ("#INVALID");
+        }
+    }
+
+    return evaluateExpression(expr.slice(expr.length - 3, expr.length));
 }
 
 function operate(num1, operator, num2) {
@@ -18,16 +79,17 @@ function operate(num1, operator, num2) {
         case '-':
             result = subtract(num1, num2);
         break;
-        case '*':
+        case 'x':
             result = multiply(num1, num2);
         break;
-        case '/':
+        case '÷':
+            if(num2 === 0) return "#DIV BY 0";
             result = divide(num1, num2);
         break;
         default:
-            result = "#INVALID";
+            throw new Error("#INVALID");
     }
-    return result;
+    return isNaN(result) ? "#INVALID" : result;
 }
 
-styleButtons();
+enableButtons();
