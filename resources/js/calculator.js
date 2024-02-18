@@ -31,7 +31,9 @@ function updateDisplay(text) {
             display.textContent = evaluateExpression(expr);
         break;
         default:
-            display.textContent = display.textContent + text;
+            if(display.textContent.length < 10)  {
+                display.textContent = display.textContent + text;
+            }
     }
 }
 
@@ -57,18 +59,36 @@ function combineNumbers(expr) {
 }
 
 function evaluateExpression(expr) {
-    // Base case
-    if(expr.length <= 3) {
-        try {
-            return operate(parseFloat(expr[0]), expr[1], parseFloat(expr[2]));
-        } catch(error) {
-            console.log(error);
-            return ("#INVALID");
+    try {
+        while(expr.length >= 3) {
+            let res = operate(parseFloat(expr[0]), expr[1], parseFloat(expr[2]));
+            expr[2] = res;
+            expr.shift();
+            expr.shift();
         }
+        if(expr.length != 1) {
+            throw new Error("#INVALID");
+        }
+        return expr[0];
+    } catch(error) {
+        console.log(error);
+        return "#INVALID";
     }
-
-    return evaluateExpression(expr.slice(expr.length - 3, expr.length));
 }
+
+// function evaluateExpression(expr) {
+//     // Base case
+//     if(expr.length <= 3) {
+//         try {
+//             return operate(parseFloat(expr[0]), expr[1], parseFloat(expr[2]));
+//         } catch(error) {
+//             console.log(error);
+//             return ("#INVALID");
+//         }
+//     }
+
+//     return evaluateExpression(expr.slice(0, expr.length - 2));
+// }
 
 function operate(num1, operator, num2) {
     let result;
