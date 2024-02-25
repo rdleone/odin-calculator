@@ -1,17 +1,41 @@
 const MAX_NUM_LEN = 9;
 
+/**
+ * Add two numbers.
+ * @param {float} x 
+ * @param {float} y 
+ * @returns The sum of the input.
+ */
 export function add(x, y) {
     return x + y;
 }
 
+/**
+ * Subtract two numbers.
+ * @param {float} x 
+ * @param {float} y 
+ * @returns The difference of the input.
+ */
 export function subtract(x, y) {
     return x - y;
 }
 
+/**
+ * Multiply two numbers.
+ * @param {float} x 
+ * @param {float} y 
+ * @returns The product of the input.
+ */
 export function multiply(x, y) {
     return x * y;
 }
 
+/**
+ * Divide two numbers.
+ * @param {float} x 
+ * @param {float} y 
+ * @returns The quotient of the input.
+ */
 export function divide(x, y) {
     if(y === 0) return "#DIV BY 0";
     const quotient = x / y;
